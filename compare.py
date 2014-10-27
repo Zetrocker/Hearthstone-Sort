@@ -3,25 +3,36 @@ __author__ = 'Zetrocker'
 import requests
 import csv
 import re
-
+import os.path
+import time
 
 file = "data.csv"
 url = "https://docs.google.com/spreadsheet/pub?key=0AsKyuF-d-OHadEJQYjlPbzByclBXZUNZcE1PcXdydXc&output=csv"
-csv_text = requests.get(url).text
-#prompts for update
-up_x = input('Download update file from LiquidHearth? Y/N ')
-#is this upper/lower case necessary?
-up_x = up_x.lower()
-if up_x == 'y':
 
-    file = "data.csv"
+def update(file, url):
     download = requests.get(url).text
-    open(file, 'r+b').write(bytes(download, 'UTF-8'))
-    print("Downloaded update from: ", url, '\n')
-if up_x == 'n':
-    print('Skipping download\n')
-else:
-    print('invalid selection\n')
+    csv_text = requests.get(url).text
+    open(file, 'wb+').write(bytes(download, 'UTF-8'))
+
+
+if os.path.isfile(file) is False:
+    update(file, url)
+
+
+print("last modified: %s" % time.ctime(os.path.getmtime(file)))
+print("created: %s" % time.ctime(os.path.getctime(file)))
+# up_x = input('Download update file from LiquidHearth? Y/N ')
+# up_x = up_x.lower()
+# if up_x == 'y':
+#
+# file = "data.csv"
+#     download = requests.get(url).text
+#     open(file, 'r+b').write(bytes(download, 'UTF-8'))
+#     print("Downloaded update from: ", url, '\n')
+# if up_x == 'n':
+#     print('Skipping download\n')
+# else:
+#     print('invalid selection\n')
 
 
 card1 = input('First card: ')
@@ -89,26 +100,26 @@ def compare(a, b):
         tiebreaker(a, b)
 
 
-def tiebreaker(b, card2):
+def tiebreaker(a, b):
     global breaker1
     global breaker2
     # breaker1, breaker2 = int, int
     for quality in card_dict:
         for card in card_dict[quality]:
-            if homogenize(b) == homogenize(card):
+            if homogenize(a) == homogenize(card):
                 breaker1 = card_dict[quality].index(card)
-            if homogenize(card2) == homogenize(card):
+            if homogenize(b) == homogenize(card):
                 breaker2 = card_dict[quality].index(card)
     if breaker1 == breaker2:
         print("Those are the same card sillypants!")
     if breaker1 < breaker2:
-        print(b, "is better than", card2)
+        print(a, "is better than", b)
     if breaker2 < breaker1:
-        print(card2, "is better than", b)
+        print(b, "is better than", a)
 
 
 def homogenize(a):
-        return a.lower()
+    return a.lower()
 
 
 # def purge(x):
@@ -124,6 +135,6 @@ def homogenize(a):
 #     return fixed
 compare(card1, card2)
 
-    # True if re.search('[0-9A-Fa-f]', 'g') else False
+# True if re.search('[0-9A-Fa-f]', 'g') else False
 
-    # print(''.join([word.group() for word in re.finditer(r'[0-9A-Za-z\s]+', '!@#HI DaVE!@#!@# THERE')]))
+# print(''.join([word.group() for word in re.finditer(r'[0-9A-Za-z\s]+', '!@#HI DaVE!@#!@# THERE')]))
