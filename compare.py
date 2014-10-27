@@ -35,7 +35,7 @@ print("created: %s" % time.ctime(os.path.getctime(file)))
 #     print('invalid selection\n')
 
 
-card1 = input('First card: ')
+card1 = input('First Card: ')
 # card1 = "Cairne Bloodhoof"
 card2 = input('Second Card: ')
 # card2 = 'Ysera'
