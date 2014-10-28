@@ -56,39 +56,26 @@ with open('data.csv', 'r') as csvfile:
 
 def find(c):
     """
-    this will find the given cards, and return a quality for the best and so forth
-    :rtype : int
-    """
+        this will find the given cards, and return a quality for the best and so forth
+        :rtype : int
+        """
     global card_quality
     global quality
 
     for quality in card_dict:
         for card in card_dict[quality]:
             if homogenize(c) == homogenize(card):
-                if quality == 'Best':
-                    card_quality = 5
-                elif quality == 'Excellent':
-                    card_quality = 4
-                elif quality == 'Good':
-                    card_quality = 3
-                elif quality == 'Average':
-                    card_quality = 2
-                elif quality == 'Poor':
-                    card_quality = 1
-                elif quality == 'Terrible':
-                    card_quality = 0
-                else:
-                    print('could not find card', c)
+                card_quality = ['Terrible', 'Poor', 'Average', 'Good', 'Excellent', 'Best'].index(quality)
                 return card_quality
 
 
 def compare(a, b):
     """
-    this will rate the cards input by best excellent.. if there is a tie it will pass the cards to a tiebreaker function
-    :param a:
-    :param b:
-    :return:
-    """
+        this will rate the cards input by best excellent.. if there is a tie it will pass the cards to a tiebreaker function
+        :param a:
+        :param b:
+        :return:
+        """
 
     c1_quality = find(a)
     c2_quality = find(b)
