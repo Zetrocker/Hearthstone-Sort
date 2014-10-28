@@ -9,6 +9,7 @@ import time
 file = "data.csv"
 url = "https://docs.google.com/spreadsheet/pub?key=0AsKyuF-d-OHadEJQYjlPbzByclBXZUNZcE1PcXdydXc&output=csv"
 
+
 def update(file, url):
     download = requests.get(url).text
     csv_text = requests.get(url).text
@@ -18,7 +19,7 @@ def update(file, url):
 if os.path.isfile(file) is False:
     update(file, url)
 
-
+#TODO: make update prompt for file, and show last update
 print("last modified: %s" % time.ctime(os.path.getmtime(file)))
 print("created: %s" % time.ctime(os.path.getctime(file)))
 # up_x = input('Download update file from LiquidHearth? Y/N ')
@@ -26,7 +27,7 @@ print("created: %s" % time.ctime(os.path.getctime(file)))
 # if up_x == 'y':
 #
 # file = "data.csv"
-#     download = requests.get(url).text
+# download = requests.get(url).text
 #     open(file, 'r+b').write(bytes(download, 'UTF-8'))
 #     print("Downloaded update from: ", url, '\n')
 # if up_x == 'n':
@@ -61,7 +62,7 @@ def find(c):
     """
     global card_quality
     global quality
-
+#TODO: simplify this into fewer lines
     for quality in card_dict:
         for card in card_dict[quality]:
             if homogenize(c) == homogenize(card):
@@ -80,6 +81,7 @@ def find(c):
                 else:
                     print('could not find card', c)
                 return card_quality
+                # class_ranking.index("best") == 1
 
 
 def compare(a, b):
@@ -117,7 +119,7 @@ def tiebreaker(a, b):
     if breaker2 < breaker1:
         print(b, "is better than", a)
 
-
+#TODO: make regular expression for this, and refactor this for regex
 def homogenize(a):
     return a.lower()
 
