@@ -36,10 +36,10 @@ print("created: %s" % time.ctime(os.path.getctime(file)))
 #     print('invalid selection\n')
 
 
-card1 = input('First Card: ')
-# card1 = "Cairne Bloodhoof"
-card2 = input('Second Card: ')
-# card2 = 'Ysera'
+# card1 = input('First Card: ')
+card1 = "Cairne Bloodhoof"
+# card2 = input('Second Card: ')
+card2 = 'Ysera'
 
 # http://graphemica.com/%E2%B1%A1
 # Need to replace *, -, and latin small l with double bar with ""
@@ -54,6 +54,11 @@ with open('data.csv', 'r') as csvfile:
             quality = class_ranking[y]
             card_dict[quality].append(x[y])
 
+# for i in reversed(class_ranking):
+#     rank_quality = i
+#     print(i)
+
+
 
 def find(c):
     """
@@ -62,26 +67,28 @@ def find(c):
     """
     global card_quality
     global quality
-#TODO: simplify this into fewer lines
     for quality in card_dict:
         for card in card_dict[quality]:
             if homogenize(c) == homogenize(card):
-                if quality == 'Best':
-                    card_quality = 5
-                elif quality == 'Excellent':
-                    card_quality = 4
-                elif quality == 'Good':
-                    card_quality = 3
-                elif quality == 'Average':
-                    card_quality = 2
-                elif quality == 'Poor':
-                    card_quality = 1
-                elif quality == 'Terrible':
-                    card_quality = 0
-                else:
-                    print('could not find card', c)
-                return card_quality
-                # class_ranking.index("best") == 1
+                for ranks in reversed(class_ranking):
+                    rank_quality = ranks
+                    if quality == rank_quality:
+                        card_quality = rank_quality.index(quality)
+                        return card_quality
+                    #                 # if quality == 'Best':
+                    #                 #     card_quality = 5
+                    #                 # elif quality == 'Excellent':
+                    #                 #     card_quality = 4
+                    #                 # elif quality == 'Good':
+                    #                 #     card_quality = 3
+                    #                 # elif quality == 'Average':
+                    #                 #     card_quality = 2
+                    #                 # elif quality == 'Poor':
+                    #                 #     card_quality = 1
+                    #                 # elif quality == 'Terrible':
+                    #                 #     card_quality = 0
+    return print('could not find card', c)
+#                 # class_ranking.index("Best") == 1
 
 
 def compare(a, b):
@@ -135,6 +142,7 @@ def homogenize(a):
 #     if y:
 #         fixed = ''.join([word.group() for word in re.finditer(r'[0-9A-Za-z\s]+', x)])
 #     return fixed
+
 compare(card1, card2)
 
 # True if re.search('[0-9A-Fa-f]', 'g') else False
