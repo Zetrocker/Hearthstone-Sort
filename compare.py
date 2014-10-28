@@ -9,6 +9,7 @@ import time
 file = "data.csv"
 url = "https://docs.google.com/spreadsheet/pub?key=0AsKyuF-d-OHadEJQYjlPbzByclBXZUNZcE1PcXdydXc&output=csv"
 
+
 def update(file, url):
     download = requests.get(url).text
     csv_text = requests.get(url).text
@@ -18,7 +19,7 @@ def update(file, url):
 if os.path.isfile(file) is False:
     update(file, url)
 
-
+#TODO: make update prompt for file, and show last update
 print("last modified: %s" % time.ctime(os.path.getmtime(file)))
 print("created: %s" % time.ctime(os.path.getctime(file)))
 # up_x = input('Download update file from LiquidHearth? Y/N ')
@@ -26,7 +27,7 @@ print("created: %s" % time.ctime(os.path.getctime(file)))
 # if up_x == 'y':
 #
 # file = "data.csv"
-#     download = requests.get(url).text
+# download = requests.get(url).text
 #     open(file, 'r+b').write(bytes(download, 'UTF-8'))
 #     print("Downloaded update from: ", url, '\n')
 # if up_x == 'n':
@@ -34,6 +35,13 @@ print("created: %s" % time.ctime(os.path.getctime(file)))
 # else:
 #     print('invalid selection\n')
 
+def ask_Clean(card1, card2):
+    """
+
+    :param card1:
+    :param card2:
+    :return:
+    """
 
 card1 = input('First Card: ')
 # card1 = "Cairne Bloodhoof"
@@ -53,32 +61,39 @@ with open('data.csv', 'r') as csvfile:
             quality = class_ranking[y]
             card_dict[quality].append(x[y])
 
+# for i in reversed(class_ranking):
+#     rank_quality = i
+#     print(i)
 
-def find(c):
+
+def rate(c):
     """
-        this will find the given cards, and return a quality for the best and so forth
-        :rtype : int
-        """
+    this will find the given cards, and return a quality for the best and so forth
+    :rtype : int, False if no other return
+    """
+    rank = class_ranking[::-1]
     global card_quality
     global quality
-
     for quality in card_dict:
-        for card in card_dict[quality]:
-            if homogenize(c) == homogenize(card):
-                card_quality = ['Terrible', 'Poor', 'Average', 'Good', 'Excellent', 'Best'].index(quality)
+        for cards in card_dict[quality]:
+            if c.lower() == cards.lower():
+                card_quality = rank.index(quality)
                 return card_quality
+    return False
+
 
 
 def compare(a, b):
     """
-        this will rate the cards input by best excellent.. if there is a tie it will pass the cards to a tiebreaker function
-        :param a:
-        :param b:
-        :return:
-        """
+    this will rate the cards input by best excellent.. if there is a tie it will pass the cards to a tiebreaker function
+    :param a:
+    :param b:
+    :return:
+    """
 
-    c1_quality = find(a)
-    c2_quality = find(b)
+    if rate(a) and rate(b) is not False:
+        c1_quality = rate(a)
+        c2_quality = rate(b)
     if c1_quality > c2_quality:
         print(a, "is better than", b)
     elif c2_quality > c1_quality:
@@ -93,9 +108,9 @@ def tiebreaker(a, b):
     # breaker1, breaker2 = int, int
     for quality in card_dict:
         for card in card_dict[quality]:
-            if homogenize(a) == homogenize(card):
+            if a.lower() == card.lower():
                 breaker1 = card_dict[quality].index(card)
-            if homogenize(b) == homogenize(card):
+            if b.lower() == card.lower():
                 breaker2 = card_dict[quality].index(card)
     if breaker1 == breaker2:
         print("Those are the same card sillypants!")
@@ -104,7 +119,7 @@ def tiebreaker(a, b):
     if breaker2 < breaker1:
         print(b, "is better than", a)
 
-
+#TODO: make regular expression for this, and refactor this for regex
 def homogenize(a):
     return a.lower()
 
@@ -120,6 +135,7 @@ def homogenize(a):
 #     if y:
 #         fixed = ''.join([word.group() for word in re.finditer(r'[0-9A-Za-z\s]+', x)])
 #     return fixed
+
 compare(card1, card2)
 
 # True if re.search('[0-9A-Fa-f]', 'g') else False
