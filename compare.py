@@ -35,11 +35,18 @@ print("created: %s" % time.ctime(os.path.getctime(file)))
 # else:
 #     print('invalid selection\n')
 
+def ask_Clean(card1, card2):
+    """
 
-# card1 = input('First Card: ')
-card1 = "Cairne Bloodhoof"
-# card2 = input('Second Card: ')
-card2 = 'Ysera'
+    :param card1:
+    :param card2:
+    :return:
+    """
+
+card1 = input('First Card: ')
+# card1 = "Cairne Bloodhoof"
+card2 = input('Second Card: ')
+# card2 = 'Ysera'
 
 # http://graphemica.com/%E2%B1%A1
 # Need to replace *, -, and latin small l with double bar with ""
@@ -59,36 +66,21 @@ with open('data.csv', 'r') as csvfile:
 #     print(i)
 
 
-
-def find(c):
+def rate(c):
     """
     this will find the given cards, and return a quality for the best and so forth
-    :rtype : int
+    :rtype : int, False if no other return
     """
+    rank = class_ranking[::-1]
     global card_quality
     global quality
     for quality in card_dict:
-        for card in card_dict[quality]:
-            if homogenize(c) == homogenize(card):
-                for ranks in reversed(class_ranking):
-                    rank_quality = ranks
-                    if quality == rank_quality:
-                        card_quality = rank_quality.index(quality)
-                        return card_quality
-                    #                 # if quality == 'Best':
-                    #                 #     card_quality = 5
-                    #                 # elif quality == 'Excellent':
-                    #                 #     card_quality = 4
-                    #                 # elif quality == 'Good':
-                    #                 #     card_quality = 3
-                    #                 # elif quality == 'Average':
-                    #                 #     card_quality = 2
-                    #                 # elif quality == 'Poor':
-                    #                 #     card_quality = 1
-                    #                 # elif quality == 'Terrible':
-                    #                 #     card_quality = 0
-    return print('could not find card', c)
-#                 # class_ranking.index("Best") == 1
+        for cards in card_dict[quality]:
+            if c.lower() == cards.lower():
+                card_quality = rank.index(quality)
+                return card_quality
+    return False
+
 
 
 def compare(a, b):
@@ -99,8 +91,9 @@ def compare(a, b):
     :return:
     """
 
-    c1_quality = find(a)
-    c2_quality = find(b)
+    if rate(a) and rate(b) is not False:
+        c1_quality = rate(a)
+        c2_quality = rate(b)
     if c1_quality > c2_quality:
         print(a, "is better than", b)
     elif c2_quality > c1_quality:
@@ -115,9 +108,9 @@ def tiebreaker(a, b):
     # breaker1, breaker2 = int, int
     for quality in card_dict:
         for card in card_dict[quality]:
-            if homogenize(a) == homogenize(card):
+            if a.lower() == card.lower():
                 breaker1 = card_dict[quality].index(card)
-            if homogenize(b) == homogenize(card):
+            if b.lower() == card.lower():
                 breaker2 = card_dict[quality].index(card)
     if breaker1 == breaker2:
         print("Those are the same card sillypants!")
