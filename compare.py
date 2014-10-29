@@ -5,6 +5,7 @@ import csv
 import re
 import os.path
 import time
+import datetime
 
 file = "data.csv"
 url = "https://docs.google.com/spreadsheet/pub?key=0AsKyuF-d-OHadEJQYjlPbzByclBXZUNZcE1PcXdydXc&output=csv"
@@ -19,29 +20,50 @@ def update(file, url):
 if os.path.isfile(file) is False:
     update(file, url)
 
-#TODO: make update prompt for file, and show last update
-print("last modified: %s" % time.ctime(os.path.getmtime(file)))
-print("created: %s" % time.ctime(os.path.getctime(file)))
-# up_x = input('Download update file from LiquidHearth? Y/N ')
+def update_prompt():
+    """
+    asks for update if data is older than a day
+    """
+    now = datetime.datetime.now()
+    fileage = datetime.datetime.fromtimestamp(os.path.getmtime(file))
+    tdelta = now - fileage
+    t_in_seconds = tdelta.total_seconds()
+    if t_in_seconds > 86400:
+        print("Current data is older than one day")
+        update_ask = input('Download update file from LiquidHearth? Y/N ')
+        update_ask.lower()
+        if update_ask == 'y':
+            download = requests.get(url).text
+            open(file, 'r+b').write(bytes(download, 'UTF-8'))
+            print("Downloaded update from: ", url, '\n')
+        else:
+            print("Skipping Download\n")
+
+update_prompt()
+# print("last modified: %s" % time.ctime(os.path.getmtime(file)))
+# print("created: %s" % time.ctime(os.path.getctime(file)))
 # up_x = up_x.lower()
 # if up_x == 'y':
 #
 # file = "data.csv"
 # download = requests.get(url).text
 #     open(file, 'r+b').write(bytes(download, 'UTF-8'))
-#     print("Downloaded update from: ", url, '\n')
+#
 # if up_x == 'n':
 #     print('Skipping download\n')
 # else:
 #     print('invalid selection\n')
 
-def ask_Clean(card1, card2):
-    """
-
-    :param card1:
-    :param card2:
-    :return:
-    """
+# def ask_Clean(card1, card2):
+#     """
+#
+#     :param card1:
+#     :param card2:
+#     :return:
+#     """
+#     global card1
+#     global card2
+#     card = {c}
 
 card1 = input('First Card: ')
 # card1 = "Cairne Bloodhoof"
@@ -52,6 +74,7 @@ card2 = input('Second Card: ')
 # Need to replace *, -, and latin small l with double bar with ""
 card_dict = dict(
     [('Best', []), ('Excellent', []), ('Good', []), ('Average', []), ('Poor', []), ('Terrible', [])])
+# card_dict = dict(lambda x: x for class_ranking[range(1, 7)])
 class_ranking = ['rank', 'Best', 'Excellent', 'Good', 'Average', 'Poor', 'Terrible']
 with open('data.csv', 'r') as csvfile:
     data = csv.reader(csvfile)
@@ -74,11 +97,11 @@ def rate(c):
     rank = class_ranking[::-1]
     global card_quality
     global quality
-    for quality in card_dict:
-        for cards in card_dict[quality]:
-            if c.lower() == cards.lower():
-                card_quality = rank.index(quality)
-                return card_quality
+    for quality, cards in card_dict:
+        # for cards in card_dict[quality]:
+        if c.lower() == cards.lower():
+            card_quality = rank.index(quality)
+            return card_quality
     return False
 
 
