@@ -4,7 +4,6 @@ import requests
 import csv
 import re
 import os.path
-import time
 import datetime
 
 file = "data.csv"
@@ -23,7 +22,7 @@ if os.path.isfile(file) is False:
 
 def update_prompt():
     """
-    asks for update if data is older than a day
+    asks for update if data is older than a day. Updates on input
     """
     now = datetime.datetime.now()
     fileage = datetime.datetime.fromtimestamp(os.path.getmtime(file))
@@ -43,18 +42,11 @@ def update_prompt():
 
 update_prompt()
 
-
-
-
-
-
-
-
-card1 = "Cairne Bloodhoof"
-# card1 = input('First Card: ')
-
-card2 = 'Ysera'
-# card2 = input('Second Card: ')
+# card1 = "Cairne Bloodhoof"
+card1 = input('First Card: ')
+#
+# card2 = 'Ysera'
+card2 = input('Second Card: ')
 
 
 
@@ -62,8 +54,8 @@ card2 = 'Ysera'
 def regex(str):
     """
      removes special characters
-     :type x: str
-     :return z: str
+     :type str: str
+     :return str: str
      """
     garbage = True if re.search('[0-9A-Za-z]', str) else False
     if garbage:
@@ -71,8 +63,7 @@ def regex(str):
         return fixed
 
 
-
-
+#TODO: Make function for creating dictionary
 card_dict = dict(
     [('Best', []), ('Excellent', []), ('Good', []), ('Average', []), ('Poor', []), ('Terrible', [])])
 # card_dict = dict(lambda x: x for class_ranking[range(1, 7)])
@@ -117,8 +108,8 @@ def compare(a, b):
     c1_quality = rate(a)
     c2_quality = rate(b)
     if type(c1_quality) is list and type(c2_quality) is list:
-        card1wins = c1_quality[0], "is better than", c2_quality[0]
-        card2wins = c2_quality[0], "is better than", c1_quality[0]
+        card1wins = c1_quality[0] + " is better than " + c2_quality[0]
+        card2wins = c2_quality[0] + " is better than " + c1_quality[0]
         if c1_quality[1] > c2_quality[1]:
             print(card1wins)
         elif c1_quality[1] < c2_quality[1]:
@@ -132,31 +123,7 @@ def compare(a, b):
             elif c1_quality[2] == c2_quality[2]:
                 print("Those are the same card sillypants!")
     else:
+        #How could this happen?
         print("I can't believe you've done this!")
 
-
-
-
-
-
-# def tiebreaker(a, b):
-#     global breaker1
-#     global breaker2
-#     # breaker1, breaker2 = int, int
-#     for quality in card_dict:
-#         for card in card_dict[quality]:
-#             if a.lower() == card.lower():
-#                 breaker1 = card_dict[quality].index(card)
-#             if b.lower() == card.lower():
-#                 breaker2 = card_dict[quality].index(card)
-#     if breaker1 == breaker2:
-#         print("Those are the same card sillypants!")
-#     if breaker1 < breaker2:
-#         print(a, "is better than", b)
-#     if breaker2 < breaker1:
-#         print(b, "is better than", a)
-
-
 compare(card1, card2)
-
-
