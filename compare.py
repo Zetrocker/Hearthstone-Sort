@@ -12,7 +12,6 @@ url = "https://docs.google.com/spreadsheet/pub?key=0AsKyuF-d-OHadEJQYjlPbzByclBX
 
 def update(file, url):
     download = requests.get(url).text
-    csv_text = requests.get(url).text
     open(file, 'wb+').write(bytes(download, 'UTF-8'))
 
 
@@ -42,6 +41,7 @@ def update_prompt():
 
 update_prompt()
 
+#TODO: make function for input of cards - see line 126
 # card1 = "Cairne Bloodhoof"
 card1 = input('First Card: ')
 #
@@ -123,7 +123,7 @@ def compare(a, b):
             elif c1_quality[2] == c2_quality[2]:
                 print("Those are the same card sillypants!")
     else:
-        #How could this happen?
+        #TODO: call function for card input
         print("I can't believe you've done this!")
 
 compare(card1, card2)
